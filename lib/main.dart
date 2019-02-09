@@ -9,9 +9,9 @@ class CuratorApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Curator',
       theme: buildThemeData(),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: HomePage(title: 'Curator'),
     );
   }
 }
