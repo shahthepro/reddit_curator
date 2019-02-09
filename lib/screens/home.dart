@@ -60,9 +60,14 @@ class _HomePageState extends State<HomePage> {
             child: ButtonBar(
               children: <Widget>[
                 IconButton(
-                  icon: Icon(Icons.favorite),
+                  icon: Icon(
+                    alreadySaved ? Icons.favorite : Icons.favorite_border,
+                    color: Colors.redAccent,
+                  ),
                   onPressed: () {
-                    print("Favorite ${feed.id}");
+                    setState(() {                      
+                      _saved.add(feed);
+                    });
                   },
                 ),
                 IconButton(
