@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reddit_curator/data/feed.dart';
+import 'package:flutter/cupertino.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -13,6 +14,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _feeds = <FeedItem>[];
   final _saved = new Set<FeedItem>();
+  bool _isLoadingOldFeeds = false;
+
+  // final Map<int, Widget> _segments = const <int, Widget>{
+  //   0: Text('Recent'),
+  //   1: Text('Popular'),
+  //   2: Text('Favorites'),
+  // };
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +32,71 @@ class _HomePageState extends State<HomePage> {
         ),
         title: Text(widget.title),
       ),
-      body: ListView.builder(itemBuilder: _buildListView),
+      body: CupertinoTabScaffold(
+        tabBar: CupertinoTabBar(
+          items: <BottomNavigationBarItem>[
+            new BottomNavigationBarItem(
+              icon: new Icon(
+                Icons.photo_library,
+                color: Colors.blueGrey,
+              ),
+              activeIcon: new Icon(
+                Icons.photo_library,
+                color: Colors.redAccent,
+              ),
+              title: Text("Latest"),
+            ),
+            new BottomNavigationBarItem(
+              icon: new Icon(
+                Icons.trending_up,
+                color: Colors.blueGrey,
+              ),
+              activeIcon: new Icon(
+                Icons.trending_up,
+                color: Colors.redAccent,
+              ),
+              title: Text("Popular"),
+            ),
+            new BottomNavigationBarItem(
+              icon: new Icon(
+                Icons.favorite,
+                color: Colors.blueGrey,
+              ),
+              activeIcon: new Icon(
+                Icons.favorite,
+                color: Colors.redAccent,
+              ),
+              title: Text("Favorites"),
+            ),
+          ],
+        ),
+        tabBuilder: (BuildContext context, int index) {
+          return CupertinoTabView(
+            builder: (BuildContext context) {
+              return new RefreshIndicator(
+                child: ListView.builder(
+                  // reverse: true,
+                  itemBuilder: _buildListView,
+                ),
+                onRefresh: _fetchNewFeeds,
+              );
+            },
+          );
+        },
+      ),
+          // new RefreshIndicator(
+          //   child: ListView.builder(
+          //     // reverse: true,
+          //     itemBuilder: _buildListView,
+          //   ),
+          //   onRefresh: _fetchNewFeeds,
+          // ),
     );
   }
 
   Widget _buildListView(BuildContext context, int index) {
     if (index >= _feeds.length) {
-      _fetchFeeds();
+      _fetchOldFeeds();
       return null;
     }
 
@@ -41,6 +107,7 @@ class _HomePageState extends State<HomePage> {
     final alreadySaved = _saved.contains(feed);
 
     return Card(
+      key: Key(feed.id),
       child: Column(
         children: <Widget>[
           ListTile(
@@ -71,13 +138,19 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
                 IconButton(
-                  icon: Icon(Icons.cloud_download),
+                  icon: Icon(
+                    Icons.cloud_download,
+                    color: Colors.blueGrey,
+                  ),
                   onPressed: () {
                     print("Download ${feed.id}");
                   },
                 ),
                 IconButton(
-                  icon: Icon(Icons.share),
+                  icon: Icon(
+                    Icons.share,
+                    color: Colors.blueGrey
+                  ),
                   onPressed: () {
                     print("Share ${feed.id}");
                   },
@@ -94,11 +167,34 @@ class _HomePageState extends State<HomePage> {
     print("Show Drawer");
   }
 
-  Future<void> _fetchFeeds() {
+  Future<void> _fetchOldFeeds() async {
+    this._isLoadingOldFeeds = true;
+    
     return Future.delayed(new Duration(seconds: 2), () {
       int startId = _feeds.length;
       setState(() {
+        this._isLoadingOldFeeds = false;
         _feeds.addAll([
+          new FeedItem("id_$startId", "Feed Item ${startId}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
+          new FeedItem("id_${startId + 1}", "Feed Item ${startId + 1}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
+          new FeedItem("id_${startId + 2}", "Feed Item ${startId + 2}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
+          new FeedItem("id_${startId + 3}", "Feed Item ${startId + 3}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
+          new FeedItem("id_${startId + 4}", "Feed Item ${startId + 4}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
+          new FeedItem("id_${startId + 5}", "Feed Item ${startId + 5}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
+          new FeedItem("id_${startId + 6}", "Feed Item ${startId + 6}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
+          new FeedItem("id_${startId + 7}", "Feed Item ${startId + 7}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
+          new FeedItem("id_${startId + 8}", "Feed Item ${startId + 8}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
+          new FeedItem("id_${startId + 9}", "Feed Item ${startId + 9}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
+        ]);
+      });
+    });
+  }
+
+  Future<void> _fetchNewFeeds() async {
+    return Future.delayed(new Duration(seconds: 2), () {
+      int startId = _feeds.length;
+      setState(() {
+        _feeds.insertAll(0, [
           new FeedItem("id_$startId", "Feed Item ${startId}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
           new FeedItem("id_${startId + 1}", "Feed Item ${startId + 1}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
           new FeedItem("id_${startId + 2}", "Feed Item ${startId + 2}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
