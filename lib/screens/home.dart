@@ -14,7 +14,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _feeds = <FeedItem>[];
   final _popular = <FeedItem>[];
-  final _saved = new Set<FeedItem>();
+  final _saved = new Set<String>();
+  // final _savedIds = new Set<String>();
+  final _savedItemsMap = new Map<String, FeedItem>();
   bool _isLoadingOldFeeds = false;
 
   // final Map<int, Widget> _segments = const <int, Widget>{
@@ -139,7 +141,7 @@ class _HomePageState extends State<HomePage> {
       return null;
     }
 
-    return _buildRow(_saved.skip(index).take(1).single);
+    return _buildRow(_savedItemsMap[_saved.skip(index).take(1).single]);
   }
 
   Widget _buildRecentListView(BuildContext context, int index) {
@@ -161,7 +163,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildRow(FeedItem feed) {
-    final alreadySaved = _saved.contains(feed);
+    final alreadySaved = _saved.contains(feed.id);
 
     return Card(
       key: Key(feed.id),
@@ -191,9 +193,11 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     setState(() {
                       if (alreadySaved) {
-                        _saved.remove(feed);
+                        _saved.remove(feed.id);
+                        _savedItemsMap.remove(feed.id);
                       } else {
-                        _saved.add(feed);
+                        _saved.add(feed.id);
+                        _savedItemsMap[feed.id] = feed;
                       }
                     });
                   },
