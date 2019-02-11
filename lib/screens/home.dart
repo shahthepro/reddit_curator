@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reddit_curator/data/feed.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:sqflite/sqflite.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
