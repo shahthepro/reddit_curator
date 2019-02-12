@@ -16,15 +16,9 @@ class _HomePageState extends State<HomePage> {
   final _feeds = <FeedItem>[];
   final _popular = <FeedItem>[];
   final _saved = new Set<String>();
-  // final _savedIds = new Set<String>();
   final _savedItemsMap = new Map<String, FeedItem>();
   bool _isLoadingOldFeeds = false;
 
-  // final Map<int, Widget> _segments = const <int, Widget>{
-  //   0: Text('Recent'),
-  //   1: Text('Popular'),
-  //   2: Text('Favorites'),
-  // };
 
   @override
   Widget build(BuildContext context) {
@@ -76,13 +70,6 @@ class _HomePageState extends State<HomePage> {
         ),
         tabBuilder: _buildTabView,
       ),
-          // new RefreshIndicator(
-          //   child: ListView.builder(
-          //     // reverse: true,
-          //     itemBuilder: _buildRecentListView,
-          //   ),
-          //   onRefresh: _fetchNewFeeds,
-          // ),
     );
   }
 
