@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:reddit_curator/data/feed.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:sqflite/sqflite.dart';
+// import 'package:sqflite/sqflite.dart';
+// import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -17,6 +19,7 @@ class _HomePageState extends State<HomePage> {
   final _popular = <FeedItem>[];
   final _saved = new Set<String>();
   final _savedItemsMap = new Map<String, FeedItem>();
+  final _images = <PhotoViewGalleryPageOptions>[];
   bool _isLoadingOldFeeds = false;
 
 
@@ -161,14 +164,17 @@ class _HomePageState extends State<HomePage> {
             title: Text(feed.title),
             subtitle: Text(feed.timestamp),
           ),
-          Container(
-            decoration: new BoxDecoration(
-              image: new DecorationImage(
-                image: new NetworkImage(feed.link),
-                fit: BoxFit.cover,
+          new GestureDetector(
+            onTap: _showImageSwiper,
+            child: Container(
+              decoration: new BoxDecoration(
+                image: new DecorationImage(
+                  image: new NetworkImage(feed.link),
+                  fit: BoxFit.cover,
+                ),
               ),
+              height: 250.0,
             ),
-            height: 250.0,
           ),
           ButtonTheme.bar(
             child: ButtonBar(
@@ -218,6 +224,69 @@ class _HomePageState extends State<HomePage> {
   
   void _showDrawer() {
     print("Show Drawer");
+  }
+
+  void mapImagesToGallery() {
+    setState(() {
+      _images.addAll(
+        _feeds.map((feed) {
+          return PhotoViewGalleryPageOptions(
+            imageProvider: NetworkImage(feed.link),
+            heroTag: feed.title
+          );
+        })
+      );
+      _currentFeed = _feeds[0];
+    });
+  }
+
+  int _currentIndex = 0;
+  FeedItem _currentFeed;
+  void _onImageSwiped(int index) {
+    setState(() {
+      _currentIndex = index;
+      _currentFeed = _feeds[index];
+    });
+  }
+
+  void _showImageSwiper() {
+    _currentIndex = 0;
+    _images.removeRange(0, _images.length);
+    mapImagesToGallery();
+    Navigator.of(context).push(
+      new MaterialPageRoute(
+        builder: (context) {
+          return new Scaffold(
+            appBar: new AppBar(
+              title: Text("Image Viewer"),
+            ),
+            body: Container(
+              constraints: BoxConstraints.expand(
+                height: MediaQuery.of(context).size.height,
+              ),
+              child: Stack(
+                alignment: Alignment.bottomRight,
+                children: <Widget>[
+                  PhotoViewGallery(
+                    pageOptions: _images,
+                    // loadingChild: widget.loadingChild,
+                    // backgroundDecoration: widget.backgroundDecoration,
+                    // pageController: widget.pageController,
+                    onPageChanged: _onImageSwiped,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Text(_currentFeed.title,
+                      style: const TextStyle(
+                          color: Colors.white, fontSize: 17.0, decoration: null),
+                    ),
+                  )
+                ],
+              )),
+          );
+        }
+      )
+    );
   }
 
   Future<void> _fetchOldFeeds({bool popular = false}) async {
