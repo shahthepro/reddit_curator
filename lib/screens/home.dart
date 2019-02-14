@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 // import 'package:sqflite/sqflite.dart';
 // import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:reddit_curator/utils/fetch-feeds.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -21,7 +22,6 @@ class _HomePageState extends State<HomePage> {
   final _savedItemsMap = new Map<String, FeedItem>();
   final _images = <PhotoViewGalleryPageOptions>[];
   bool _isLoadingOldFeeds = false;
-
 
   @override
   Widget build(BuildContext context) {
@@ -290,6 +290,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _fetchOldFeeds({bool popular = false}) async {
+    fetchData(popular: popular);
     this._isLoadingOldFeeds = true;
     
     return Future.delayed(new Duration(seconds: 2), () {
@@ -329,6 +330,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _fetchNewFeeds({bool popular = false}) async {
+    fetchData(popular: popular);
     return Future.delayed(new Duration(seconds: 2), () {
       setState(() {
         if (popular) {
