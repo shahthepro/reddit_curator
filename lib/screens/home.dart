@@ -132,7 +132,7 @@ class _HomePageState extends State<HomePage> {
       return null;
     }
 
-    return _buildRow(_savedItemsMap[_saved.skip(index).take(1).single]);
+    return _buildRow(_savedItemsMap[_saved.skip(index).take(1).single], favorites: true, index: index);
   }
 
   Widget _buildRecentListView(BuildContext context, int index) {
@@ -141,7 +141,7 @@ class _HomePageState extends State<HomePage> {
       return null;
     }
 
-    return _buildRow(_feeds[index]);
+    return _buildRow(_feeds[index], index: index);
   }
 
   Widget _buildPopularListView(BuildContext context, int index) {
@@ -150,10 +150,10 @@ class _HomePageState extends State<HomePage> {
       return null;
     }
 
-    return _buildRow(_popular[index]);
+    return _buildRow(_popular[index], popular: true, index: index);
   }
 
-  Widget _buildRow(FeedItem feed) {
+  Widget _buildRow(FeedItem feed, { popular = false, favorites = false, index = 0 }) {
     final alreadySaved = _saved.contains(feed.id);
 
     return Card(
@@ -165,7 +165,9 @@ class _HomePageState extends State<HomePage> {
             subtitle: Text(feed.timestamp),
           ),
           new GestureDetector(
-            onTap: _showImageSwiper,
+            onTap: () {
+              _showImageSwiper(popular: popular, favorites: favorites, startIndex: index);
+            },
             child: Container(
               decoration: new BoxDecoration(
                 image: new DecorationImage(
@@ -240,19 +242,23 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  int _currentIndex = 0;
+  // int _currentIndex = 0;
   FeedItem _currentFeed;
   void _onImageSwiped(int index) {
     setState(() {
-      _currentIndex = index;
+      // _currentIndex = index;
       _currentFeed = _feeds[index];
     });
   }
 
-  void _showImageSwiper() {
-    _currentIndex = 0;
+  void _setupImageSwiper({ bool popular = false, favorites = false, int startIndex = 0 }) {}
+
+  void _showImageSwiper({ bool popular = false, favorites = false, int startIndex = 0 }) {
+    // _currentIndex = 0;
     _images.removeRange(0, _images.length);
+
     mapImagesToGallery();
+
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (context) {
@@ -271,16 +277,16 @@ class _HomePageState extends State<HomePage> {
                     pageOptions: _images,
                     // loadingChild: widget.loadingChild,
                     // backgroundDecoration: widget.backgroundDecoration,
-                    // pageController: widget.pageController,
+                    pageController: PageController(initialPage: startIndex),
                     onPageChanged: _onImageSwiped,
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Text(_currentFeed.title,
-                      style: const TextStyle(
-                          color: Colors.white, fontSize: 17.0, decoration: null),
-                    ),
-                  )
+                  // Container(
+                  //   padding: const EdgeInsets.all(20.0),
+                  //   child: Text(_currentFeed.title,
+                  //     style: const TextStyle(
+                  //         color: Colors.white, fontSize: 17.0, decoration: null),
+                  //   ),
+                  // )
                 ],
               )),
           );
