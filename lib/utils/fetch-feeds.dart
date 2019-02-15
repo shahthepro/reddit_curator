@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
 final _newBaseURL = "https://reddit.com/r/AnimalsBeingBros+AnimalsBeingDerps+AnimalsBeingJerks+Awwducational+aww+cats+dogs+likeus+rarepuppers/search.rss?q=site%3A(i.redd.it+OR+i.imgur.com)&sort=new&restrict_sr=on&t=all";
-final _popularBaseURL = "https://reddit.com/r/AnimalsBeingBros+AnimalsBeingDerps+AnimalsBeingJerks+Awwducational+aww+cats+dogs+likeus+rarepuppers/search.rss?q=site%3A(i.redd.it+OR+i.imgur.com)&sort=popular&restrict_sr=on&t=all";
+final _popularBaseURL = "https://reddit.com/r/AnimalsBeingBros+AnimalsBeingDerps+AnimalsBeingJerks+Awwducational+aww+cats+dogs+likeus+rarepuppers/search.rss?q=site%3A(i.redd.it+OR+i.imgur.com)&sort=popular&restrict_sr=on&t=day";
 
 Future<List<FeedItem>> fetchData({ popular = false, before = "", after = "" }) {
   String url = popular ? _popularBaseURL : _newBaseURL;

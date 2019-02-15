@@ -290,7 +290,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<FeedItem> _fetchOldFeeds({bool popular = false}) async {
-    return fetchData(popular: popular)
+    String after = "";
+    if (popular && _popular.length > 0) {
+      after = _popular.last.id;
+    } else if (!popular && _feeds.length > 0) {
+      after = _feeds.last.id;
+    }
+    return fetchData(popular: popular, after: after)
       .then((newData) {
         setState(() {
           if (popular) {
@@ -300,89 +306,24 @@ class _HomePageState extends State<HomePage> {
           }      
         });
       });
-
-    // this._isLoadingOldFeeds = true;
-    
-    // return Future.delayed(new Duration(seconds: 2), () {
-    //   setState(() {
-    //     this._isLoadingOldFeeds = false;
-    //     if (popular) {
-    //       int startId = _popular.length;
-    //       _popular.addAll([
-    //         new FeedItem("id_$startId", "Popular Feed ${startId}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 1}", "Popular Feed ${startId + 1}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 2}", "Popular Feed ${startId + 2}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 3}", "Popular Feed ${startId + 3}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 4}", "Popular Feed ${startId + 4}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 5}", "Popular Feed ${startId + 5}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 6}", "Popular Feed ${startId + 6}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 7}", "Popular Feed ${startId + 7}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 8}", "Popular Feed ${startId + 8}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 9}", "Popular Feed ${startId + 9}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //       ]);
-    //     } else {
-    //       int startId = _feeds.length;
-    //       _feeds.addAll([
-    //         new FeedItem("id_$startId", "Feed Item ${startId}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 1}", "Feed Item ${startId + 1}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 2}", "Feed Item ${startId + 2}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 3}", "Feed Item ${startId + 3}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 4}", "Feed Item ${startId + 4}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 5}", "Feed Item ${startId + 5}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 6}", "Feed Item ${startId + 6}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 7}", "Feed Item ${startId + 7}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 8}", "Feed Item ${startId + 8}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 9}", "Feed Item ${startId + 9}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //       ]);
-    //     }
-    //   });
-    // });
   }
 
   Future<FeedItem> _fetchNewFeeds({bool popular = false}) async {
-    return fetchData(popular: popular)
+    String before = "";
+    if (popular && _popular.length > 0) {
+      before = _popular.first.id;
+    } else if (!popular && _feeds.length > 0) {
+      before = _feeds.first.id;
+    }
+    return fetchData(popular: popular, before: before)
       .then((newData) {
         setState(() {
           if (popular) {
-            _popular.addAll(newData);
+            _popular.insertAll(0, newData);
           } else {
-            _feeds.addAll(newData);
+            _feeds.insertAll(0, newData);
           }      
         });
       });
-
-    // return Future.delayed(new Duration(seconds: 2), () {
-    //   setState(() {
-    //     if (popular) {
-    //       int startId = _popular.length;
-    //       _popular.insertAll(0, [
-    //         new FeedItem("id_$startId", "Popular Feed ${startId}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 1}", "Popular Feed ${startId + 1}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 2}", "Popular Feed ${startId + 2}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 3}", "Popular Feed ${startId + 3}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 4}", "Popular Feed ${startId + 4}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 5}", "Popular Feed ${startId + 5}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 6}", "Popular Feed ${startId + 6}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 7}", "Popular Feed ${startId + 7}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 8}", "Popular Feed ${startId + 8}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 9}", "Popular Feed ${startId + 9}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //       ]);
-    //     } else {
-    //       int startId = _feeds.length;
-    //       _feeds.insertAll(0, [
-    //         new FeedItem("id_$startId", "Feed Item ${startId}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 1}", "Feed Item ${startId + 1}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 2}", "Feed Item ${startId + 2}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 3}", "Feed Item ${startId + 3}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 4}", "Feed Item ${startId + 4}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 5}", "Feed Item ${startId + 5}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 6}", "Feed Item ${startId + 6}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 7}", "Feed Item ${startId + 7}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 8}", "Feed Item ${startId + 8}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //         new FeedItem("id_${startId + 9}", "Feed Item ${startId + 9}", "https://preview.redd.it/56ot0vqsvif21.jpg?width=640&crop=smart&auto=webp&s=22fbf9ad69942e7a4c4d4e442daa0cadf97ffbd4", "11h ago", 0),
-    //       ]);
-    //     }
-    //   });
-    // });
   }
 }
