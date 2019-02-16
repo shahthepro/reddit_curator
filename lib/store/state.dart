@@ -33,6 +33,9 @@ class AppStateWidget extends StatefulWidget {
 }
 
 class AppStateWidgetState extends State<AppStateWidget>{
+
+  String get appTitle => "MediaCurator";
+
   final _feeds = List<FeedItem>();
   final _popular = List<FeedItem>();
   final _savedItemsMap = new Map<String, FeedItem>();

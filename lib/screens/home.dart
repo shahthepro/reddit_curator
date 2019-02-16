@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 // import 'package:sqflite/sqflite.dart';
 // import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:reddit_curator/store/state.dart';
 import 'package:reddit_curator/utils/fetch-feeds.dart';
 import 'package:reddit_curator/utils/share.dart';
 
@@ -26,49 +27,34 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final AppStateWidgetState state = AppStateWidget.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        leading: new IconButton(
-          icon: const Icon(Icons.menu), 
-          onPressed: _showDrawer,
-        ),
-        title: Text(widget.title),
+        title: Text(state.appTitle),
       ),
       body: CupertinoTabScaffold(
         tabBar: CupertinoTabBar(
           items: <BottomNavigationBarItem>[
             new BottomNavigationBarItem(
-              icon: new Icon(
-                Icons.photo_library,
-                color: Colors.blueGrey,
-              ),
-              activeIcon: new Icon(
-                Icons.photo_library,
-                color: Colors.redAccent,
-              ),
+              icon: new Icon(Icons.photo_library, color: Colors.blueGrey),
+              activeIcon: new Icon(Icons.photo_library, color: Colors.redAccent),
               title: Text("Latest"),
             ),
             new BottomNavigationBarItem(
-              icon: new Icon(
-                Icons.trending_up,
-                color: Colors.blueGrey,
-              ),
-              activeIcon: new Icon(
-                Icons.trending_up,
-                color: Colors.redAccent,
-              ),
+              icon: new Icon(Icons.trending_up, color: Colors.blueGrey),
+              activeIcon: new Icon(Icons.trending_up, color: Colors.redAccent),
               title: Text("Popular"),
             ),
             new BottomNavigationBarItem(
-              icon: new Icon(
-                Icons.favorite,
-                color: Colors.blueGrey,
-              ),
-              activeIcon: new Icon(
-                Icons.favorite,
-                color: Colors.redAccent,
-              ),
+              icon: new Icon(Icons.favorite, color: Colors.blueGrey),
+              activeIcon: new Icon(Icons.favorite, color: Colors.redAccent),
               title: Text("Favorites"),
+            ),
+            new BottomNavigationBarItem(
+              icon: new Icon(Icons.more_horiz, color: Colors.blueGrey),
+              activeIcon: new Icon(Icons.more_horiz, color: Colors.redAccent),
+              title: Text("Options"),
             ),
           ],
         ),
@@ -85,8 +71,18 @@ class _HomePageState extends State<HomePage> {
         return _buildPopularTabView();
       case 2:
         return _buildFavoritesTabView();
+      case 3:
+        return _buildSettingsView();
     }
     return _buildRecentTabView();
+  }
+
+  Widget _buildSettingsView() {
+    return new CupertinoTabView(
+      builder: (BuildContext context) {
+        return Text("HELLO WORLD");
+      },
+    );
   }
 
   Widget _buildRecentTabView() {
