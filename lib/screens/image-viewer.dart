@@ -7,8 +7,9 @@ import 'package:photo_view/photo_view_gallery.dart';
 import 'package:reddit_curator/store/state.dart';
 
 class ImageViewerScreen extends StatefulWidget {
-  ImageViewerScreen({ Key key, this.startIndex = 0 }) : super(key: key);
+  ImageViewerScreen({ Key key, this.listItems, this.startIndex = 0 }) : super(key: key);
 
+  final List<FeedItem> listItems;
   final int startIndex;
 
   @override
@@ -26,6 +27,7 @@ class _ImageViewerScreenState extends State<ImageViewerScreen> {
     final AppStateWidgetState state = AppStateWidget.of(context);
     // _images.removeRange(0, _images.length);
     _getFeeds(state);
+    print(state.feedsCount);
 
     return Scaffold(
       appBar: new AppBar(
@@ -47,6 +49,7 @@ class _ImageViewerScreenState extends State<ImageViewerScreen> {
   }
 
   void _mapFeedsToGallery(List<FeedItem> feeds) {
+    print(feeds.length);
     setState(() {
       _images.addAll(
         feeds.map((feed) {

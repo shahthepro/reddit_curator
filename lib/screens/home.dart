@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 // import 'package:sqflite/sqflite.dart';
 // import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:reddit_curator/screens/image-viewer.dart';
 import 'package:reddit_curator/store/state.dart';
 import 'package:reddit_curator/utils/fetch-feeds.dart';
 import 'package:reddit_curator/utils/share.dart';
@@ -47,7 +48,7 @@ class _HomePageState extends State<HomePage> {
         _getBottomTabItem(icon: Icons.photo_library, title: "Latest"),
         _getBottomTabItem(icon: Icons.trending_up, title: "Popular"),
         _getBottomTabItem(icon: Icons.favorite, title: "Favorites"),
-        _getBottomTabItem(icon: Icons.more_horiz, title: "Options"),
+        _getBottomTabItem(icon: Icons.more_horiz, title: "More"),
       ],
     );
   }
@@ -220,69 +221,14 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void mapImagesToGallery() {
-    setState(() {
-      _images.addAll(
-        _feeds.map((feed) {
-          return PhotoViewGalleryPageOptions(
-            imageProvider: NetworkImage(feed.link),
-            heroTag: feed.title
-          );
-        })
-      );
-      _currentFeed = _feeds[0];
-    });
-  }
-
-  // int _currentIndex = 0;
-  FeedItem _currentFeed;
-  void _onImageSwiped(int index) {
-    setState(() {
-      // _currentIndex = index;
-      _currentFeed = _feeds[index];
-    });
-  }
-
-  void _setupImageSwiper({ bool popular = false, favorites = false }) {
-    _images.removeRange(0, _images.length);
-  }
-
   void _showImageSwiper({ bool popular = false, favorites = false, int startIndex = 0 }) {
-    _setupImageSwiper(popular: popular, favorites: favorites);
-
-    mapImagesToGallery();
-
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (context) {
-          return new Scaffold(
-            appBar: new AppBar(
-              title: Text("Image Viewer"),
-            ),
-            body: Container(
-              constraints: BoxConstraints.expand(
-                height: MediaQuery.of(context).size.height,
-              ),
-              child: Stack(
-                alignment: Alignment.bottomRight,
-                children: <Widget>[
-                  PhotoViewGallery(
-                    pageOptions: _images,
-                    // loadingChild: widget.loadingChild,
-                    // backgroundDecoration: widget.backgroundDecoration,
-                    pageController: PageController(initialPage: startIndex),
-                    onPageChanged: _onImageSwiped,
-                  ),
-                  // Container(
-                  //   padding: const EdgeInsets.all(20.0),
-                  //   child: Text(_currentFeed.title,
-                  //     style: const TextStyle(
-                  //         color: Colors.white, fontSize: 17.0, decoration: null),
-                  //   ),
-                  // )
-                ],
-              )),
-          );
+          return new ImageViewerScreen(startIndex: startIndex);
+          // return AppStateWidget(
+          //   child: new ImageViewerScreen(startIndex: startIndex),
+          // );
         }
       )
     );
@@ -295,14 +241,6 @@ class _HomePageState extends State<HomePage> {
     } else if (!popular && _feeds.length > 0) {
       after = _feeds.last.id;
     }
-    
-    // setState(() {
-    //   if (popular) {
-    //     _popularIndicatorKey.currentState.show(atTop: false);
-    //   } else {
-    //     _recentIndicatorKey.currentState.show(atTop: false);
-    //   }
-    // });
 
     return fetchData(popular: popular, after: after)
       .then((newData) {
@@ -323,13 +261,7 @@ class _HomePageState extends State<HomePage> {
     } else if (!popular && _feeds.length > 0) {
       before = _feeds.first.id;
     }
-    // setState(() {
-    //   if (popular) {
-    //     _popularIndicatorKey.currentState.show(atTop: true);
-    //   } else {
-    //     _recentIndicatorKey.currentState.show(atTop: true);
-    //   }
-    // });
+
     return fetchData(popular: popular, before: before)
       .then((newData) {
         setState(() {
