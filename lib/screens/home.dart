@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 // import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:reddit_curator/utils/fetch-feeds.dart';
+import 'package:image_downloader/image_downloader.dart';
+import 'package:reddit_curator/utils/share.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -21,7 +23,9 @@ class _HomePageState extends State<HomePage> {
   final _saved = new Set<String>();
   final _savedItemsMap = new Map<String, FeedItem>();
   final _images = <PhotoViewGalleryPageOptions>[];
-  bool _isLoadingOldFeeds = false;
+
+  final GlobalKey<RefreshIndicatorState> _recentIndicatorKey = new GlobalKey<RefreshIndicatorState>();
+  final GlobalKey<RefreshIndicatorState> _popularIndicatorKey = new GlobalKey<RefreshIndicatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +100,7 @@ class _HomePageState extends State<HomePage> {
             itemBuilder: _buildRecentListView,
           ),
           onRefresh: _fetchNewFeeds,
+          key: _recentIndicatorKey,
         );
       },
     );
@@ -111,6 +116,7 @@ class _HomePageState extends State<HomePage> {
           onRefresh: () {
             _fetchNewFeeds(popular: true);
           },
+          key: _popularIndicatorKey,
         );
       },
     );
@@ -136,7 +142,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildRecentListView(BuildContext context, int index) {
-    if (index >= _feeds.length) {
+    if (index + 10 >= _feeds.length) {
       _fetchOldFeeds();
       return null;
     }
@@ -145,7 +151,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildPopularListView(BuildContext context, int index) {
-    if (index >= _popular.length) {
+    if (index + 10 >= _popular.length) {
       _fetchOldFeeds(popular: true);
       return null;
     }
@@ -203,8 +209,8 @@ class _HomePageState extends State<HomePage> {
                     Icons.cloud_download,
                     color: Colors.blueGrey,
                   ),
-                  onPressed: () {
-                    print("Download ${feed.id}");
+                  onPressed: () async {
+                    downloadImage(feed.link);
                   },
                 ),
                 IconButton(
@@ -251,11 +257,12 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _setupImageSwiper({ bool popular = false, favorites = false, int startIndex = 0 }) {}
+  void _setupImageSwiper({ bool popular = false, favorites = false }) {
+    _images.removeRange(0, _images.length);
+  }
 
   void _showImageSwiper({ bool popular = false, favorites = false, int startIndex = 0 }) {
-    // _currentIndex = 0;
-    _images.removeRange(0, _images.length);
+    _setupImageSwiper(popular: popular, favorites: favorites);
 
     mapImagesToGallery();
 
@@ -302,6 +309,15 @@ class _HomePageState extends State<HomePage> {
     } else if (!popular && _feeds.length > 0) {
       after = _feeds.last.id;
     }
+    
+    // setState(() {
+    //   if (popular) {
+    //     _popularIndicatorKey.currentState.show(atTop: false);
+    //   } else {
+    //     _recentIndicatorKey.currentState.show(atTop: false);
+    //   }
+    // });
+
     return fetchData(popular: popular, after: after)
       .then((newData) {
         setState(() {
@@ -321,6 +337,13 @@ class _HomePageState extends State<HomePage> {
     } else if (!popular && _feeds.length > 0) {
       before = _feeds.first.id;
     }
+    // setState(() {
+    //   if (popular) {
+    //     _popularIndicatorKey.currentState.show(atTop: true);
+    //   } else {
+    //     _recentIndicatorKey.currentState.show(atTop: true);
+    //   }
+    // });
     return fetchData(popular: popular, before: before)
       .then((newData) {
         setState(() {
