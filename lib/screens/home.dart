@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 // import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:reddit_curator/utils/fetch-feeds.dart';
-import 'package:image_downloader/image_downloader.dart';
 import 'package:reddit_curator/utils/share.dart';
 
 class HomePage extends StatefulWidget {
@@ -219,7 +218,7 @@ class _HomePageState extends State<HomePage> {
                     color: Colors.blueGrey
                   ),
                   onPressed: () {
-                    print("Share ${feed.id}");
+                    shareImage(feed.link);
                   },
                 ),
               ],
