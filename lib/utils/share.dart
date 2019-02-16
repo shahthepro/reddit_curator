@@ -20,7 +20,7 @@ Future<bool> shareImage(String imageLink) async {
   return http.get(imageLink).then((response) async {
     final contentType = response.headers['content-type'];
     final extension = contentType.split("/")[1];
-    final byteData = response.bodyBytes.buffer.asByteData();;
+    final byteData = response.bodyBytes.buffer.asByteData();
     // final base64Data = base64Encode(byteData);
     // final dataURI = "data:$contentType;base64,$base64Data";
     final fileName = "${new DateTime.now().millisecondsSinceEpoch}.$extension";

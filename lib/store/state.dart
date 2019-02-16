@@ -91,6 +91,16 @@ class AppStateWidgetState extends State<AppStateWidget>{
     });
   }
 
+  void prependFeeds(List<FeedItem> feeds, { popular = false }) {
+    setState(() {
+      if (popular) {
+        _popular.insertAll(0, feeds);
+      } else {
+        _feeds.insertAll(0, feeds);
+      }
+    });
+  }
+
   bool isFavorite(FeedItem feed)  {
     return _savedItemsMap.containsKey(feed);
   }

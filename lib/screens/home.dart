@@ -3,7 +3,6 @@ import 'package:reddit_curator/data/feed.dart';
 import 'package:flutter/cupertino.dart';
 // import 'package:sqflite/sqflite.dart';
 // import 'package:photo_view/photo_view.dart';
-import 'package:photo_view/photo_view_gallery.dart';
 import 'package:reddit_curator/screens/image-viewer.dart';
 import 'package:reddit_curator/store/state.dart';
 import 'package:reddit_curator/utils/fetch-feeds.dart';
@@ -17,14 +16,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final _feeds = <FeedItem>[];
-  final _popular = <FeedItem>[];
-  final _saved = new Set<String>();
-  final _savedItemsMap = new Map<String, FeedItem>();
-  final _images = <PhotoViewGalleryPageOptions>[];
-
-  final GlobalKey<RefreshIndicatorState> _recentIndicatorKey = new GlobalKey<RefreshIndicatorState>();
-  final GlobalKey<RefreshIndicatorState> _popularIndicatorKey = new GlobalKey<RefreshIndicatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +82,6 @@ class _HomePageState extends State<HomePage> {
             itemBuilder: _buildRecentListView,
           ),
           onRefresh: _fetchNewFeeds,
-          key: _recentIndicatorKey,
         );
       },
     );
@@ -107,7 +97,6 @@ class _HomePageState extends State<HomePage> {
           onRefresh: () {
             _fetchNewFeeds(popular: true);
           },
-          key: _popularIndicatorKey,
         );
       },
     );
@@ -125,33 +114,40 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildFavoritesListView(BuildContext context, int index) {
-    if (index >= _saved.length) {
+    AppStateWidgetState state = AppStateWidget.of(context);
+
+    if (index >= state.savedCount) {
       return null;
     }
 
-    return _buildRow(_savedItemsMap[_saved.skip(index).take(1).single], favorites: true, index: index);
+    return _buildRow(state.favoriteFeeds[index], favorites: true, index: index);
   }
 
   Widget _buildRecentListView(BuildContext context, int index) {
-    if (index + 10 >= _feeds.length) {
+    AppStateWidgetState state = AppStateWidget.of(context);
+
+    if (index >= state.feedsCount) {
       _fetchOldFeeds();
       return null;
     }
 
-    return _buildRow(_feeds[index], index: index);
+    return _buildRow(state.recentFeeds[index], index: index);
   }
 
   Widget _buildPopularListView(BuildContext context, int index) {
-    if (index + 10 >= _popular.length) {
+    AppStateWidgetState state = AppStateWidget.of(context);
+
+    if (index >= state.popularCount) {
       _fetchOldFeeds(popular: true);
       return null;
     }
 
-    return _buildRow(_popular[index], popular: true, index: index);
+    return _buildRow(state.popularFeeds[index], popular: true, index: index);
   }
 
   Widget _buildRow(FeedItem feed, { popular = false, favorites = false, index = 0 }) {
-    final alreadySaved = _saved.contains(feed.id);
+    AppStateWidgetState state = AppStateWidget.of(context);
+    final alreadySaved = state.isFavorite(feed);
 
     return Card(
       key: Key(feed.id),
@@ -184,15 +180,7 @@ class _HomePageState extends State<HomePage> {
                     color: Colors.redAccent,
                   ),
                   onPressed: () {
-                    setState(() {
-                      if (alreadySaved) {
-                        _saved.remove(feed.id);
-                        _savedItemsMap.remove(feed.id);
-                      } else {
-                        _saved.add(feed.id);
-                        _savedItemsMap[feed.id] = feed;
-                      }
-                    });
+                    state.favoriteFeed(feed);
                   },
                 ),
                 IconButton(
@@ -226,51 +214,40 @@ class _HomePageState extends State<HomePage> {
       new MaterialPageRoute(
         builder: (context) {
           return new ImageViewerScreen(startIndex: startIndex);
-          // return AppStateWidget(
-          //   child: new ImageViewerScreen(startIndex: startIndex),
-          // );
         }
       )
     );
   }
 
   Future<FeedItem> _fetchOldFeeds({bool popular = false}) async {
+    AppStateWidgetState state = AppStateWidget.of(context);
+
     String after = "";
-    if (popular && _popular.length > 0) {
-      after = _popular.last.id;
-    } else if (!popular && _feeds.length > 0) {
-      after = _feeds.last.id;
+    if (popular && state.popularCount > 0) {
+      after = state.popularFeeds.last.id;
+    } else if (!popular && state.feedsCount > 0) {
+      after = state.recentFeeds.last.id;
     }
 
     return fetchData(popular: popular, after: after)
       .then((newData) {
-        setState(() {
-          if (popular) {
-            _popular.addAll(newData);
-          } else {
-            _feeds.addAll(newData);
-          }      
-        });
+        state.appendFeeds(newData, popular: popular);
       });
   }
 
   Future<FeedItem> _fetchNewFeeds({bool popular = false}) async {
+    AppStateWidgetState state = AppStateWidget.of(context);
+
     String before = "";
-    if (popular && _popular.length > 0) {
-      before = _popular.first.id;
-    } else if (!popular && _feeds.length > 0) {
-      before = _feeds.first.id;
+    if (popular && state.popularCount > 0) {
+      before = state.popularFeeds.first.id;
+    } else if (!popular && state.feedsCount > 0) {
+      before = state.recentFeeds.first.id;
     }
 
     return fetchData(popular: popular, before: before)
       .then((newData) {
-        setState(() {
-          if (popular) {
-            _popular.insertAll(0, newData);
-          } else {
-            _feeds.insertAll(0, newData);
-          }      
-        });
+        state.prependFeeds(newData, popular: popular);
       });
   }
 }

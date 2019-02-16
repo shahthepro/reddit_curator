@@ -27,7 +27,7 @@ class _ImageViewerScreenState extends State<ImageViewerScreen> {
     final AppStateWidgetState state = AppStateWidget.of(context);
     // _images.removeRange(0, _images.length);
     _getFeeds(state);
-    print(state.feedsCount);
+    print(state.activeTab);
 
     return Scaffold(
       appBar: new AppBar(
