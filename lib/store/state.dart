@@ -1,12 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:reddit_curator/data/feed.dart';
 
-class Item {
-   String reference;
-
-   Item(this.reference);
-}
-
 class _AppState extends InheritedWidget {
   _AppState({
     Key key,

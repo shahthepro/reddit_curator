@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reddit_curator/screens/home.dart';
+import 'package:reddit_curator/store/state.dart';
 import 'package:reddit_curator/themes/index.dart';
 
 void main() => runApp(CuratorApp());
@@ -12,7 +13,9 @@ class CuratorApp extends StatelessWidget {
     return MaterialApp(
       title: 'Curator',
       theme: buildThemeData(),
-      home: HomePage(title: 'Curator'),
+      home: AppStateWidget(
+        child: HomePage(),
+      ),
     );
   }
 }

@@ -8,9 +8,7 @@ import 'package:reddit_curator/utils/fetch-feeds.dart';
 import 'package:reddit_curator/utils/share.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
+  HomePage({Key key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
