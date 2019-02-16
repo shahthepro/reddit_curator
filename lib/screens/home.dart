@@ -34,32 +34,29 @@ class _HomePageState extends State<HomePage> {
         title: Text(state.appTitle),
       ),
       body: CupertinoTabScaffold(
-        tabBar: CupertinoTabBar(
-          items: <BottomNavigationBarItem>[
-            new BottomNavigationBarItem(
-              icon: new Icon(Icons.photo_library, color: Colors.blueGrey),
-              activeIcon: new Icon(Icons.photo_library, color: Colors.redAccent),
-              title: Text("Latest"),
-            ),
-            new BottomNavigationBarItem(
-              icon: new Icon(Icons.trending_up, color: Colors.blueGrey),
-              activeIcon: new Icon(Icons.trending_up, color: Colors.redAccent),
-              title: Text("Popular"),
-            ),
-            new BottomNavigationBarItem(
-              icon: new Icon(Icons.favorite, color: Colors.blueGrey),
-              activeIcon: new Icon(Icons.favorite, color: Colors.redAccent),
-              title: Text("Favorites"),
-            ),
-            new BottomNavigationBarItem(
-              icon: new Icon(Icons.more_horiz, color: Colors.blueGrey),
-              activeIcon: new Icon(Icons.more_horiz, color: Colors.redAccent),
-              title: Text("Options"),
-            ),
-          ],
-        ),
+        tabBar: _getBottomTabBar(state),
         tabBuilder: _buildTabView,
       ),
+    );
+  }
+
+  Widget _getBottomTabBar(AppStateWidgetState state) {
+    return CupertinoTabBar(
+      onTap: state.setCurrentTabView,
+      items: <BottomNavigationBarItem>[
+        _getBottomTabItem(icon: Icons.photo_library, title: "Latest"),
+        _getBottomTabItem(icon: Icons.trending_up, title: "Popular"),
+        _getBottomTabItem(icon: Icons.favorite, title: "Favorites"),
+        _getBottomTabItem(icon: Icons.more_horiz, title: "Options"),
+      ],
+    );
+  }
+
+  BottomNavigationBarItem _getBottomTabItem({IconData icon, String title}) {
+    return new BottomNavigationBarItem(
+      icon: new Icon(icon, color: Colors.blueGrey),
+      activeIcon: new Icon(icon, color: Colors.redAccent),
+      title: Text(title),
     );
   }
 
@@ -80,7 +77,7 @@ class _HomePageState extends State<HomePage> {
   Widget _buildSettingsView() {
     return new CupertinoTabView(
       builder: (BuildContext context) {
-        return Text("HELLO WORLD");
+        return Text("Settings Page");
       },
     );
   }
@@ -221,10 +218,6 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
-  }
-  
-  void _showDrawer() {
-    print("Show Drawer");
   }
 
   void mapImagesToGallery() {

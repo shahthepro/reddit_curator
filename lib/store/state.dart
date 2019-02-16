@@ -1,6 +1,13 @@
 import 'package:flutter/widgets.dart';
 import 'package:reddit_curator/data/feed.dart';
 
+enum TabViewPages {
+  Recent,
+  Popular,
+  Favorites,
+  Options,
+}
+
 class _AppState extends InheritedWidget {
   _AppState({
     Key key,
@@ -33,8 +40,24 @@ class AppStateWidget extends StatefulWidget {
 }
 
 class AppStateWidgetState extends State<AppStateWidget>{
-
   String get appTitle => "MediaCurator";
+
+  TabViewPages _activeTab = TabViewPages.Recent;
+  TabViewPages get activeTab => _activeTab;
+
+  void setCurrentTabView(int tabIndex) {
+    setState(() {
+      if (TabViewPages.Recent.index == tabIndex) {
+        _activeTab = TabViewPages.Recent;
+      } else if (TabViewPages.Popular.index == tabIndex) { 
+        _activeTab = TabViewPages.Popular;
+      } else if (TabViewPages.Favorites.index == tabIndex) { 
+        _activeTab = TabViewPages.Favorites;
+      } else if (TabViewPages.Options.index == tabIndex) { 
+        _activeTab = TabViewPages.Options;
+      }
+    });
+  }
 
   final _feeds = List<FeedItem>();
   final _popular = List<FeedItem>();
