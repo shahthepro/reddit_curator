@@ -75,6 +75,9 @@ class AppStateWidgetState extends State<AppStateWidget>{
       _loaders--;
     });
   }
+  
+  bool _shouldShowAds = true;
+  bool get shouldShowAds => _shouldShowAds;
 
   final _feeds = List<FeedItem>();
   final _popular = List<FeedItem>();

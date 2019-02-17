@@ -105,7 +105,7 @@ class _HomePageState extends State<HomePage> {
             itemBuilder: _buildRecentListView,
           ),
           onRefresh: () {
-            _fetchNewFeeds();
+            return _fetchNewFeeds();
           },
         );
       },
@@ -122,7 +122,7 @@ class _HomePageState extends State<HomePage> {
             itemBuilder: _buildPopularListView,
           ),
           onRefresh: () {
-            _fetchNewFeeds(popular: true);
+            return _fetchNewFeeds(popular: true);
           },
         );
       },
@@ -184,7 +184,7 @@ class _HomePageState extends State<HomePage> {
   Widget _buildRow(FeedItem feed, { popular = false, favorites = false, index = 0 }) {
     AppStateWidgetState state = AppStateWidget.of(context);
 
-    return buildCard(
+    final card = buildCard(
       feed,
       context: context,
       onImageTap: () { _showImageSwiper(startIndex: index); },
@@ -192,6 +192,20 @@ class _HomePageState extends State<HomePage> {
       onShare: () { shareImage(feed.link); },
       onFavorite: () { state.favoriteFeed(feed); },
     );
+
+    // if (state.shouldShowAds && (index + 1) % 6 == 0) {
+    //   final adBanner = AdmobBanner(
+    //     adUnitId: 'ca-app-pub-3061718245955245/6882442044',
+    //     adSize: AdmobBannerSize.LARGE_BANNER,
+    //   );
+
+    //   return Column(children: <Widget>[
+    //     card,
+    //     adBanner,
+    //   ]);
+    // }
+
+    return card;
   }
 
   void _showImageSwiper({ int startIndex = 0 }) {

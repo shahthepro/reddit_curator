@@ -18,8 +18,6 @@ Future<List<FeedItem>> getAllFavorites() async {
         0,
       );
     }).toList();
-
-    print(favorites.length);
   } on Exception catch (e) {
     print(e);
   }

@@ -27,3 +27,11 @@ subprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+subprojects {
+  project.configurations.all {
+      resolutionStrategy.force 'androidx.versionedparcelable:versionedparcelable:1.0.0'
+      resolutionStrategy.force 'androidx.lifecycle:lifecycle-runtime:2.0.0'
+      resolutionStrategy.force 'androidx.core:core:1.0.1'
+  }
+}
