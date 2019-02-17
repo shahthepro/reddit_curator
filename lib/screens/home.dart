@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 // import 'package:sqflite/sqflite.dart';
 import 'package:reddit_curator/screens/image-viewer.dart';
 import 'package:reddit_curator/store/state.dart';
+import 'package:reddit_curator/utils/ads.dart';
 import 'package:reddit_curator/utils/favorites.dart';
 import 'package:reddit_curator/utils/fetch-feeds.dart';
 import 'package:reddit_curator/utils/share.dart';
@@ -188,17 +189,34 @@ class _HomePageState extends State<HomePage> {
     final card = buildCard(
       feed,
       context: context,
-      onImageTap: () { _showImageSwiper(startIndex: index); },
-      onDownload: () { downloadImage(feed.link); },
-      onShare: () { shareImage(feed.link); },
-      onFavorite: () { state.favoriteFeed(feed); },
+      onImageTap: () {
+        if (state.shouldShowAds) {
+          showInterstitialAdIfNecessary();
+        }
+        _showImageSwiper(startIndex: index);
+      },
+      onDownload: () {
+        if (state.shouldShowAds) {
+          showInterstitialAdIfNecessary();
+        }
+        downloadImage(feed.link);
+      },
+      onShare: () {
+        if (state.shouldShowAds) {
+          showInterstitialAdIfNecessary();
+        }
+        shareImage(feed.link);
+      },
+      onFavorite: () {
+        if (state.shouldShowAds) {
+          showInterstitialAdIfNecessary();
+        }
+        state.favoriteFeed(feed);
+      },
     );
 
     if (state.shouldShowAds && (index + 1) % 6 == 0) {
-      final adBanner = AdmobBanner(
-        adUnitId: 'ca-app-pub-3061718245955245/6882442044',
-        adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
-      );
+      final adBanner = getBannerAd();
 
       return Column(children: <Widget>[
         card,
