@@ -3,7 +3,6 @@ import 'package:reddit_curator/components/card-view.dart';
 import 'package:reddit_curator/data/feed.dart';
 import 'package:flutter/cupertino.dart';
 // import 'package:sqflite/sqflite.dart';
-// import 'package:photo_view/photo_view.dart';
 import 'package:reddit_curator/screens/image-viewer.dart';
 import 'package:reddit_curator/store/state.dart';
 import 'package:reddit_curator/utils/fetch-feeds.dart';
@@ -27,10 +26,22 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         title: Text(state.appTitle),
       ),
-      body: CupertinoTabScaffold(
-        tabBar: _getBottomTabBar(state),
-        tabBuilder: _buildTabView,
-      ),
+      body: Stack(
+        alignment: Alignment.center,
+        children: <Widget>[
+          CupertinoTabScaffold(
+            tabBar: _getBottomTabBar(state),
+            tabBuilder: _buildTabView,
+          ),
+          Positioned(
+            child: Visibility(
+              visible: state.isLoading,
+              child: CircularProgressIndicator(),
+            ),
+            bottom: 60,
+          ),
+        ],
+      )
     );
   }
 
@@ -79,11 +90,15 @@ class _HomePageState extends State<HomePage> {
   Widget _buildRecentTabView() {
     return new CupertinoTabView(
       builder: (BuildContext context) {
+        final AppStateWidgetState state = AppStateWidget.of(context);
+        
         return new RefreshIndicator(
           child: ListView.builder(
             itemBuilder: _buildRecentListView,
           ),
-          onRefresh: _fetchNewFeeds,
+          onRefresh: () {
+            _fetchNewFeeds();
+          },
         );
       },
     );
@@ -92,6 +107,8 @@ class _HomePageState extends State<HomePage> {
   Widget _buildPopularTabView() {
     return new CupertinoTabView(
       builder: (BuildContext context) {
+        final AppStateWidgetState state = AppStateWidget.of(context);
+
         return new RefreshIndicator(
           child: ListView.builder(
             itemBuilder: _buildPopularListView,
@@ -129,6 +146,10 @@ class _HomePageState extends State<HomePage> {
   Widget _buildRecentListView(BuildContext context, int index) {
     AppStateWidgetState state = AppStateWidget.of(context);
 
+    // if (index + 5 >= state.feedsCount) {
+    //   _fetchOldFeeds();
+    // }
+    
     if (index >= state.feedsCount) {
       _fetchOldFeeds();
       return null;
@@ -139,6 +160,10 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildPopularListView(BuildContext context, int index) {
     AppStateWidgetState state = AppStateWidget.of(context);
+
+    // if (index + 5 >= state.popularCount) {
+    //   _fetchOldFeeds(popular: true);
+    // }
 
     if (index >= state.popularCount) {
       _fetchOldFeeds(popular: true);

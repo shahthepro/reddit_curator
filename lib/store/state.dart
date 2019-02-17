@@ -59,6 +59,22 @@ class AppStateWidgetState extends State<AppStateWidget>{
     });
   }
 
+  int _loaders = 0;
+
+  bool get isLoading => _loaders > 0;
+
+  void asyncJobStarted() {
+    setState(() {
+      _loaders++;
+    });
+  }
+
+  void asyncJobCompleted() {
+    setState(() {
+      _loaders--;
+    });
+  }
+
   final _feeds = List<FeedItem>();
   final _popular = List<FeedItem>();
   final _savedIds = Set<String>();
