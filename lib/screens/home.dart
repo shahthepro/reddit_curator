@@ -1,3 +1,4 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:reddit_curator/components/card-view.dart';
 import 'package:reddit_curator/data/feed.dart';
@@ -193,17 +194,17 @@ class _HomePageState extends State<HomePage> {
       onFavorite: () { state.favoriteFeed(feed); },
     );
 
-    // if (state.shouldShowAds && (index + 1) % 6 == 0) {
-    //   final adBanner = AdmobBanner(
-    //     adUnitId: 'ca-app-pub-3061718245955245/6882442044',
-    //     adSize: AdmobBannerSize.LARGE_BANNER,
-    //   );
+    if (state.shouldShowAds && (index + 1) % 6 == 0) {
+      final adBanner = AdmobBanner(
+        adUnitId: 'ca-app-pub-3061718245955245/6882442044',
+        adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+      );
 
-    //   return Column(children: <Widget>[
-    //     card,
-    //     adBanner,
-    //   ]);
-    // }
+      return Column(children: <Widget>[
+        card,
+        adBanner,
+      ]);
+    }
 
     return card;
   }
