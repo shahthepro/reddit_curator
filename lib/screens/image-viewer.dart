@@ -17,7 +17,7 @@ class ImageViewerScreen extends StatefulWidget {
 }
 
 void _onImageSwiped(int index) {
-  print('swiped');
+  //
 }
 
 class _ImageViewerScreenState extends State<ImageViewerScreen> {
@@ -69,7 +69,7 @@ class _ImageViewerScreenState extends State<ImageViewerScreen> {
         _mapFeedsToGallery(state.popularFeeds);
         break;
       case TabViewPages.Favorites:
-        _mapFeedsToGallery(state.favoriteFeeds);
+        _mapFeedsToGallery(state.favoriteFeeds.reversed.toList());
         break;
       default:
         _mapFeedsToGallery(state.recentFeeds);

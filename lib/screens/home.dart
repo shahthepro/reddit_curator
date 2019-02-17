@@ -122,7 +122,7 @@ class _HomePageState extends State<HomePage> {
 
     int reversedIndex = (state.savedCount - 1 - index);
 
-    return _buildRow(state.favoriteFeeds[reversedIndex], favorites: true, index: reversedIndex);
+    return _buildRow(state.favoriteFeeds[reversedIndex], favorites: true, index: index);
   }
 
   Widget _buildRecentListView(BuildContext context, int index) {
