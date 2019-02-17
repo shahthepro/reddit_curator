@@ -61,6 +61,7 @@ class AppStateWidgetState extends State<AppStateWidget>{
 
   final _feeds = List<FeedItem>();
   final _popular = List<FeedItem>();
+  final _savedIds = Set<String>();
   final _savedItemsMap = new Map<String, FeedItem>();
 
   int get feedsCount => _feeds.length;
@@ -102,16 +103,18 @@ class AppStateWidgetState extends State<AppStateWidget>{
   }
 
   bool isFavorite(FeedItem feed)  {
-    return _savedItemsMap.containsKey(feed);
+    return _savedIds.contains(feed.id);
   }
 
   void favoriteFeed(FeedItem feed) {
-    final alreadySaved = _savedItemsMap.containsKey(feed);
+    final alreadySaved = isFavorite(feed);
 
     setState(() {
       if (alreadySaved) {
+        _savedIds.remove(feed.id);
         _savedItemsMap.remove(feed.id);
       } else {
+        _savedIds.add(feed.id);
         _savedItemsMap[feed.id] = feed;
       }
     });

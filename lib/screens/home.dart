@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reddit_curator/components/card-view.dart';
 import 'package:reddit_curator/data/feed.dart';
 import 'package:flutter/cupertino.dart';
 // import 'package:sqflite/sqflite.dart';
@@ -106,7 +107,6 @@ class _HomePageState extends State<HomePage> {
     return new CupertinoTabView(
       builder: (BuildContext context) {
         return ListView.builder(
-          reverse: true,
           itemBuilder: _buildFavoritesListView,
         );
       }
@@ -120,7 +120,9 @@ class _HomePageState extends State<HomePage> {
       return null;
     }
 
-    return _buildRow(state.favoriteFeeds[index], favorites: true, index: index);
+    int reversedIndex = (state.savedCount - 1 - index);
+
+    return _buildRow(state.favoriteFeeds[reversedIndex], favorites: true, index: reversedIndex);
   }
 
   Widget _buildRecentListView(BuildContext context, int index) {
@@ -147,69 +149,18 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildRow(FeedItem feed, { popular = false, favorites = false, index = 0 }) {
     AppStateWidgetState state = AppStateWidget.of(context);
-    final alreadySaved = state.isFavorite(feed);
 
-    return Card(
-      key: Key(feed.id),
-      child: Column(
-        children: <Widget>[
-          ListTile(
-            title: Text(feed.title),
-            subtitle: Text(feed.timestamp),
-          ),
-          new GestureDetector(
-            onTap: () {
-              _showImageSwiper(popular: popular, favorites: favorites, startIndex: index);
-            },
-            child: Container(
-              decoration: new BoxDecoration(
-                image: new DecorationImage(
-                  image: new NetworkImage(feed.link),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              height: 250.0,
-            ),
-          ),
-          ButtonTheme.bar(
-            child: ButtonBar(
-              children: <Widget>[
-                IconButton(
-                  icon: Icon(
-                    alreadySaved ? Icons.favorite : Icons.favorite_border,
-                    color: Colors.redAccent,
-                  ),
-                  onPressed: () {
-                    state.favoriteFeed(feed);
-                  },
-                ),
-                IconButton(
-                  icon: Icon(
-                    Icons.cloud_download,
-                    color: Colors.blueGrey,
-                  ),
-                  onPressed: () async {
-                    downloadImage(feed.link);
-                  },
-                ),
-                IconButton(
-                  icon: Icon(
-                    Icons.share,
-                    color: Colors.blueGrey
-                  ),
-                  onPressed: () {
-                    shareImage(feed.link);
-                  },
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
+    return buildCard(
+      feed,
+      context: context,
+      onImageTap: () { _showImageSwiper(startIndex: index); },
+      onDownload: () { downloadImage(feed.link); },
+      onShare: () { shareImage(feed.link); },
+      onFavorite: () { state.favoriteFeed(feed); },
     );
   }
 
-  void _showImageSwiper({ bool popular = false, favorites = false, int startIndex = 0 }) {
+  void _showImageSwiper({ int startIndex = 0 }) {
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (context) {
