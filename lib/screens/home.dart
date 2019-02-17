@@ -24,6 +24,7 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(state.appTitle),
       ),
       body: CupertinoTabScaffold(

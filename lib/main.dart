@@ -11,7 +11,6 @@ class CuratorApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new AppStateWidget(
       child: MaterialApp(
-        title: 'Curator',
         theme: buildThemeData(),
         home: HomePage(),
         // builder: (BuildContext context, Widget child) {
