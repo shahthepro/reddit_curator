@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:reddit_curator/data/feed.dart';
+import 'package:reddit_curator/utils/favorites.dart';
 
 enum TabViewPages {
   Recent,
@@ -129,9 +130,20 @@ class AppStateWidgetState extends State<AppStateWidget>{
       if (alreadySaved) {
         _savedIds.remove(feed.id);
         _savedItemsMap.remove(feed.id);
+        removeFavorite(feed);
       } else {
         _savedIds.add(feed.id);
         _savedItemsMap[feed.id] = feed;
+        storeFavorite(feed);
+      }
+    });
+  }
+
+  void loadFavorites(List<FeedItem> favorites) {
+    setState(() {
+      for (int i = 0; i < favorites.length; i++) {
+        _savedIds.add(favorites[i].id);
+        _savedItemsMap[favorites[i].id] = favorites[i];
       }
     });
   }

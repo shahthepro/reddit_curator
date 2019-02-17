@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 // import 'package:sqflite/sqflite.dart';
 import 'package:reddit_curator/screens/image-viewer.dart';
 import 'package:reddit_curator/store/state.dart';
+import 'package:reddit_curator/utils/favorites.dart';
 import 'package:reddit_curator/utils/fetch-feeds.dart';
 import 'package:reddit_curator/utils/share.dart';
 
@@ -13,13 +14,20 @@ class HomePage extends StatefulWidget {
 
   @override
   _HomePageState createState() => _HomePageState();
+
 }
 
 class _HomePageState extends State<HomePage> {
+  bool _loadedFromDatabase = false;
 
   @override
   Widget build(BuildContext context) {
     final AppStateWidgetState state = AppStateWidget.of(context);
+
+    if (!_loadedFromDatabase) {
+      _loadedFromDatabase = true;
+      getAllFavorites().then((favs) { state.loadFavorites(favs); });
+    }
 
     return Scaffold(
       appBar: AppBar(
