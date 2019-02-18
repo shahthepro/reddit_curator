@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 // import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:reddit_curator/store/state.dart';
+import 'package:reddit_curator/utils/ads.dart';
 
 class ImageViewerScreen extends StatefulWidget {
   ImageViewerScreen({ Key key, this.listItems, this.startIndex = 0 }) : super(key: key);
@@ -17,7 +18,7 @@ class ImageViewerScreen extends StatefulWidget {
 }
 
 void _onImageSwiped(int index) {
-  //
+  showInterstitialAdIfNecessary();
 }
 
 class _ImageViewerScreenState extends State<ImageViewerScreen> {

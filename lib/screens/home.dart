@@ -220,7 +220,9 @@ class _HomePageState extends State<HomePage> {
 
       return Column(children: <Widget>[
         card,
-        adBanner,
+        Card(
+          child: adBanner,
+        ),
       ]);
     }
 
