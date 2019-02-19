@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reddit_curator/components/bottom-button-bar.dart';
 import 'package:reddit_curator/data/feed.dart';
 import 'package:reddit_curator/store/state.dart';
 
@@ -26,25 +27,32 @@ Widget buildCard(FeedItem feed, { @required BuildContext context, @required Func
           ),
         ),
         ButtonTheme.bar(
-          child: ButtonBar(
-            children: <Widget>[
-              IconButton(
-                icon: Icon(
-                  state.isFavorite(feed) ? Icons.favorite : Icons.favorite_border,
-                  color: Colors.redAccent,
-                ),
-                onPressed: onFavorite
-              ),
-              IconButton(
-                icon: Icon(Icons.cloud_download, color: Colors.blueGrey),
-                onPressed: onDownload,
-              ),
-              IconButton(
-                icon: Icon(Icons.share, color: Colors.blueGrey),
-                onPressed: onShare,
-              ),
-            ],
+          child: getBottomButtonBar(
+            state: state,
+            feed: feed,
+            onDownload: onDownload,
+            onShare: onShare,
+            onFavorite: onFavorite,
           ),
+          // child: ButtonBar(
+          //   children: <Widget>[
+          //     IconButton(
+          //       icon: Icon(
+          //         state.isFavorite(feed) ? Icons.favorite : Icons.favorite_border,
+          //         color: Colors.redAccent,
+          //       ),
+          //       onPressed: onFavorite
+          //     ),
+          //     IconButton(
+          //       icon: Icon(Icons.cloud_download, color: Colors.blueGrey),
+          //       onPressed: onDownload,
+          //     ),
+          //     IconButton(
+          //       icon: Icon(Icons.share, color: Colors.blueGrey),
+          //       onPressed: onShare,
+          //     ),
+          //   ],
+          // ),
         )
       ],
     ),

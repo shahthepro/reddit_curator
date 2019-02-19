@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:reddit_curator/components/bottom-button-bar.dart';
 import 'package:reddit_curator/data/feed.dart';
 import 'package:flutter/cupertino.dart';
 // import 'package:sqflite/sqflite.dart';
@@ -8,21 +10,24 @@ import 'package:reddit_curator/store/state.dart';
 import 'package:reddit_curator/utils/ads.dart';
 
 class ImageViewerScreen extends StatefulWidget {
-  ImageViewerScreen({ Key key, this.listItems, this.startIndex = 0 }) : super(key: key);
+  ImageViewerScreen({ Key key, this.startIndex = 0, this.onFavorite, this.onShare, this.onDownload }) : super(key: key);
 
-  final List<FeedItem> listItems;
   final int startIndex;
+  final Function onFavorite;
+  final Function onDownload;
+  final Function onShare;
 
   @override
   _ImageViewerScreenState createState() => _ImageViewerScreenState();
 }
 
-void _onImageSwiped(int index) {
-  showInterstitialAdIfNecessary();
-}
-
 class _ImageViewerScreenState extends State<ImageViewerScreen> {
   final List<PhotoViewGalleryPageOptions> _images = List<PhotoViewGalleryPageOptions>();
+  FeedItem _currentFeed;
+  List<FeedItem> _allFeeds;
+  int _currentIndex;
+  bool _zoomed = false;
+
   @override
   Widget build(BuildContext context) {
     final AppStateWidgetState state = AppStateWidget.of(context);
@@ -41,20 +46,52 @@ class _ImageViewerScreenState extends State<ImageViewerScreen> {
           pageOptions: _images,
           // loadingChild: widget.loadingChild,
           // backgroundDecoration: widget.backgroundDecoration,
+          scaleStateChangedCallback: (PhotoViewScaleState scaleState) {
+            setState(() {
+              _zoomed = (scaleState == PhotoViewScaleState.zooming);
+            });
+          },
           pageController: PageController(initialPage: widget.startIndex),
           onPageChanged: _onImageSwiped,
         ),
-      )
+      ),
+      bottomNavigationBar: Visibility(
+        visible: !_zoomed,
+        child: BottomAppBar(
+          child: getBottomButtonBar(
+            feed:_currentFeed, 
+            state: state, 
+            onDownload: widget.onDownload,
+            onShare: widget.onShare,
+            onFavorite: widget.onFavorite,
+          ),
+        ),
+      ),
     );
+  }
+
+  void _onImageSwiped(int index) {
+    if (_currentIndex == index) {
+      return;
+    }
+    setState(() {
+      _currentIndex = index;
+      _currentFeed =_allFeeds[index];
+    });
+    showInterstitialAdIfNecessary();
   }
 
   void _mapFeedsToGallery(List<FeedItem> feeds) {
     setState(() {
+      if (_currentFeed == null) {
+        _currentFeed = feeds[widget.startIndex];
+      }
+      _allFeeds = feeds;
       _images.addAll(
         feeds.map((feed) {
           return PhotoViewGalleryPageOptions(
             imageProvider: NetworkImage(feed.link),
-            heroTag: feed.title
+            heroTag: feed.title,
           );
         })
       );

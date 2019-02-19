@@ -195,24 +195,9 @@ class _HomePageState extends State<HomePage> {
         }
         _showImageSwiper(startIndex: index);
       },
-      onDownload: () {
-        if (state.shouldShowAds) {
-          showInterstitialAdIfNecessary();
-        }
-        downloadImage(feed.link);
-      },
-      onShare: () {
-        if (state.shouldShowAds) {
-          showInterstitialAdIfNecessary();
-        }
-        shareImage(feed.link);
-      },
-      onFavorite: () {
-        if (state.shouldShowAds) {
-          showInterstitialAdIfNecessary();
-        }
-        state.favoriteFeed(feed);
-      },
+      onDownload: _onFeedDownload,
+      onShare: _onFeedShare,
+      onFavorite: _onFeedFavorite,
     );
 
     if (state.shouldShowAds && (index + 1) % 6 == 0) {
@@ -229,11 +214,35 @@ class _HomePageState extends State<HomePage> {
     return card;
   }
 
+  void _onFeedDownload({ FeedItem feed, AppStateWidgetState state }) {
+    if (state.shouldShowAds) {
+      showInterstitialAdIfNecessary();
+    }
+    downloadImage(feed.link);
+  }
+  void _onFeedShare({ FeedItem feed, AppStateWidgetState state }) {
+    if (state.shouldShowAds) {
+      showInterstitialAdIfNecessary();
+    }
+    shareImage(feed.link);
+  }
+  void _onFeedFavorite({ FeedItem feed, AppStateWidgetState state }) {
+    if (state.shouldShowAds) {
+      showInterstitialAdIfNecessary();
+    }
+    state.favoriteFeed(feed);
+  }
+
   void _showImageSwiper({ int startIndex = 0 }) {
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (context) {
-          return new ImageViewerScreen(startIndex: startIndex);
+          return new ImageViewerScreen(
+            startIndex: startIndex,
+            onDownload: _onFeedDownload,
+            onShare: _onFeedShare,
+            onFavorite: _onFeedFavorite,
+          );
         }
       )
     );
