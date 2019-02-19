@@ -26,7 +26,6 @@ class _ImageViewerScreenState extends State<ImageViewerScreen> {
   FeedItem _currentFeed;
   List<FeedItem> _allFeeds;
   int _currentIndex;
-  bool _zoomed = false;
   bool _hidden = false;
 
   @override
@@ -36,46 +35,71 @@ class _ImageViewerScreenState extends State<ImageViewerScreen> {
     _getFeeds(state);
 
     return Scaffold(
-      appBar: new AppBar(
-        title: Text("Image Viewer"),
-      ),
+      // appBar: new AppBar(
+      //   title: Text(_currentFeed.title),
+      // ),
       body: Container(
         constraints: BoxConstraints.expand(
           height: MediaQuery.of(context).size.height,
         ),
-        child: GestureDetector(
-          child: PhotoViewGallery(
-            pageOptions: _images,
-            // loadingChild: widget.loadingChild,
-            // backgroundDecoration: widget.backgroundDecoration,
-            scaleStateChangedCallback: (PhotoViewScaleState scaleState) {
-              setState(() {
-                _hidden = (scaleState != PhotoViewScaleState.initial);
-              });
-            },
-            pageController: PageController(initialPage: widget.startIndex),
-            onPageChanged: _onImageSwiped,
-          ),
-          onTap: () {
-            setState(() {
-              _hidden = !_hidden;
-            });
-          },
+        child: Stack(
+          children: <Widget>[
+            GestureDetector(
+              child: PhotoViewGallery(
+                pageOptions: _images,
+                // loadingChild: widget.loadingChild,
+                // backgroundDecoration: widget.backgroundDecoration,
+                scaleStateChangedCallback: (PhotoViewScaleState scaleState) {
+                  setState(() {
+                    _hidden = (scaleState != PhotoViewScaleState.initial);
+                  });
+                },
+                pageController: PageController(initialPage: widget.startIndex),
+                onPageChanged: _onImageSwiped,
+              ),
+              onTap: () {
+                setState(() {
+                  _hidden = !_hidden;
+                });
+              },
+            ),
+            AnimatedPositioned(
+              bottom: _hidden ? -300 : 0,
+              left: 0,
+              right: 0,
+              child: AnimatedOpacity(
+                // visible: !_hidden,
+                opacity: _hidden ? 0.0 : 1,
+                duration: Duration(milliseconds: 300),
+                child: BottomAppBar(
+                  color: Colors.black87,
+                  child: getBottomButtonBar(
+                    feed:_currentFeed, 
+                    state: state, 
+                    onDownload: widget.onDownload,
+                    onShare: widget.onShare,
+                    onFavorite: widget.onFavorite,
+                  ),
+                ),
+              ),
+              duration: Duration(milliseconds: 300),
+            )
+          ],
         )
       ),
-      bottomNavigationBar: Visibility(
-        visible: !_hidden,
-        child: BottomAppBar(
-          color: Colors.black87,
-          child: getBottomButtonBar(
-            feed:_currentFeed, 
-            state: state, 
-            onDownload: widget.onDownload,
-            onShare: widget.onShare,
-            onFavorite: widget.onFavorite,
-          ),
-        ),
-      ),
+      // bottomNavigationBar: Visibility(
+      //   visible: !_hidden,
+      //   child: BottomAppBar(
+      //     color: Colors.black87,
+      //     child: getBottomButtonBar(
+      //       feed:_currentFeed, 
+      //       state: state, 
+      //       onDownload: widget.onDownload,
+      //       onShare: widget.onShare,
+      //       onFavorite: widget.onFavorite,
+      //     ),
+      //   ),
+      // ),
     );
   }
 
