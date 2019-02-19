@@ -27,6 +27,7 @@ dependencies:
   esys_flutter_share: ^0.0.9
   # firebase_admob: ^0.8.0
   admob_flutter: ^0.1.2
+  timeago: ^2.0.10
 
 dev_dependencies:
   flutter_test:

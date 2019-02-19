@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:reddit_curator/components/bottom-button-bar.dart';
 import 'package:reddit_curator/data/feed.dart';
 import 'package:reddit_curator/store/state.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 Widget buildCard(FeedItem feed, { @required BuildContext context, @required Function onImageTap, @required Function onDownload, @required Function onShare, @required Function onFavorite }) {
   AppStateWidgetState state = AppStateWidget.of(context);
+
+  DateTime timestamp = DateTime.parse(feed.timestamp);
 
   return Card(
     key: Key(feed.id),
@@ -12,7 +15,7 @@ Widget buildCard(FeedItem feed, { @required BuildContext context, @required Func
       children: <Widget>[
         ListTile(
           title: Text(feed.title),
-          subtitle: Text(feed.timestamp),
+          subtitle: Text(timeago.format(timestamp)),
         ),
         new GestureDetector(
           onTap: onImageTap,
