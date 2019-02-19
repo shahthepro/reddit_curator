@@ -4,6 +4,7 @@ import 'package:reddit_curator/store/state.dart';
 
 Widget getBottomButtonBar({ @required FeedItem feed, @required AppStateWidgetState state, @required Function onFavorite, @required Function onShare, @required Function onDownload }) {
   return ButtonBar(
+    alignment: MainAxisAlignment.spaceEvenly,
     children: <Widget>[
       IconButton(
         icon: Icon(

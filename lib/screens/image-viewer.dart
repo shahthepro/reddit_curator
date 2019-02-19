@@ -27,6 +27,7 @@ class _ImageViewerScreenState extends State<ImageViewerScreen> {
   List<FeedItem> _allFeeds;
   int _currentIndex;
   bool _zoomed = false;
+  bool _hidden = false;
 
   @override
   Widget build(BuildContext context) {
@@ -42,22 +43,30 @@ class _ImageViewerScreenState extends State<ImageViewerScreen> {
         constraints: BoxConstraints.expand(
           height: MediaQuery.of(context).size.height,
         ),
-        child: PhotoViewGallery(
-          pageOptions: _images,
-          // loadingChild: widget.loadingChild,
-          // backgroundDecoration: widget.backgroundDecoration,
-          scaleStateChangedCallback: (PhotoViewScaleState scaleState) {
+        child: GestureDetector(
+          child: PhotoViewGallery(
+            pageOptions: _images,
+            // loadingChild: widget.loadingChild,
+            // backgroundDecoration: widget.backgroundDecoration,
+            scaleStateChangedCallback: (PhotoViewScaleState scaleState) {
+              setState(() {
+                _hidden = (scaleState != PhotoViewScaleState.initial);
+              });
+            },
+            pageController: PageController(initialPage: widget.startIndex),
+            onPageChanged: _onImageSwiped,
+          ),
+          onTap: () {
             setState(() {
-              _zoomed = (scaleState == PhotoViewScaleState.zooming);
+              _hidden = !_hidden;
             });
           },
-          pageController: PageController(initialPage: widget.startIndex),
-          onPageChanged: _onImageSwiped,
-        ),
+        )
       ),
       bottomNavigationBar: Visibility(
-        visible: !_zoomed,
+        visible: !_hidden,
         child: BottomAppBar(
+          color: Colors.black87,
           child: getBottomButtonBar(
             feed:_currentFeed, 
             state: state, 
