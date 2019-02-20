@@ -156,13 +156,26 @@ class _HomePageState extends State<HomePage> {
   Widget _buildRecentListView(BuildContext context, int index) {
     AppStateWidgetState state = AppStateWidget.of(context);
 
-    // if (index + 5 >= state.feedsCount) {
-    //   _fetchOldFeeds();
-    // }
-    
-    if (index >= state.feedsCount) {
-      _fetchOldFeeds();
+    if (index > state.feedsCount) {
       return null;
+    }
+
+    if (index >= state.feedsCount) {
+      return new FutureBuilder(
+        future: _fetchOldFeeds(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            return _buildRow(state.recentFeeds[index], index: index);
+          } else {
+            return Center(
+              child: Padding(
+                padding: EdgeInsets.all(50.0),
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+        },
+      );
     }
 
     return _buildRow(state.recentFeeds[index], index: index);
@@ -248,7 +261,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<FeedItem> _fetchOldFeeds({bool popular = false}) async {
+  Future<void> _fetchOldFeeds({bool popular = false}) async {
     AppStateWidgetState state = AppStateWidget.of(context);
 
     String after = "";
@@ -264,7 +277,7 @@ class _HomePageState extends State<HomePage> {
       });
   }
 
-  Future<FeedItem> _fetchNewFeeds({bool popular = false}) async {
+  Future<void> _fetchNewFeeds({bool popular = false}) async {
     AppStateWidgetState state = AppStateWidget.of(context);
 
     String before = "";
