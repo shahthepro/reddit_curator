@@ -184,13 +184,26 @@ class _HomePageState extends State<HomePage> {
   Widget _buildPopularListView(BuildContext context, int index) {
     AppStateWidgetState state = AppStateWidget.of(context);
 
-    // if (index + 5 >= state.popularCount) {
-    //   _fetchOldFeeds(popular: true);
-    // }
+    if (index > state.popularCount) {
+      return null;
+    }
 
     if (index >= state.popularCount) {
-      _fetchOldFeeds(popular: true);
-      return null;
+      return new FutureBuilder(
+        future: _fetchOldFeeds(popular: true),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            return _buildRow(state.popularFeeds[index], popular: true, index: index);
+          } else {
+            return Center(
+              child: Padding(
+                padding: EdgeInsets.all(50.0),
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+        },
+      );
     }
 
     return _buildRow(state.popularFeeds[index], popular: true, index: index);
@@ -214,12 +227,11 @@ class _HomePageState extends State<HomePage> {
     );
 
     if (state.shouldShowAds && (index + 1) % 6 == 0) {
-      final adBanner = getBannerAd();
-
       return Column(children: <Widget>[
         card,
-        Card(
-          child: adBanner,
+        Padding(
+          padding: EdgeInsets.all(30.0),
+          child:getBannerAd(),
         ),
       ]);
     }

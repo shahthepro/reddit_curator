@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 
@@ -42,8 +44,16 @@ Future<void> showInterstitialAdIfNecessary() async {
 }
 
 Widget getBannerAd() {
-  return AdmobBanner(
-    adUnitId: 'ca-app-pub-3061718245955245/6882442044',
-    adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
-  );
+  // return new Future(() async {
+  //   var completer = new Completer();
+
+    AdmobBanner adBanner = AdmobBanner(
+      adUnitId: 'ca-app-pub-3061718245955245/6882442044',
+      adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+    );
+
+    return adBanner;
+
+  //   return completer.future;
+  // });
 }
