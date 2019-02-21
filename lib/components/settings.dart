@@ -9,7 +9,8 @@ Widget getSettingsPage() {
       children: <Widget>[
         Divider(height: 15.0, color: Colors.transparent),
         ListTile(
-          title: Text('Remove ads'),
+          title: Text("Remove ads"),
+          subtitle: Text("Get rid of all ads for \$2/yr"),
           onTap: () {
             print("Tapped");
           },
@@ -17,7 +18,8 @@ Widget getSettingsPage() {
         ),
         Divider(height: 15.0),
         ListTile(
-          title: Text('Give feedback'),
+          title: Text("Rate & Review app"),
+          subtitle: Text("Love the app? Leave us a review on Store"),
           onTap: () {
             print("Tapped");
           },
@@ -25,7 +27,7 @@ Widget getSettingsPage() {
         ),
         Divider(height: 15.0),
         ListTile(
-          title: Text('Privacy policy'),
+          title: Text("Privacy policy"),
           onTap: () {
             print("Tapped");
           },
@@ -33,7 +35,7 @@ Widget getSettingsPage() {
         ),
         Divider(height: 15.0),
         ListTile(
-          title: Text('Disclaimer'),
+          title: Text("Disclaimer"),
           onTap: () {
             print("Tapped");
           },
