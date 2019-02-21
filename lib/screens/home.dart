@@ -1,6 +1,7 @@
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:reddit_curator/components/card-view.dart';
+import 'package:reddit_curator/components/settings.dart';
 import 'package:reddit_curator/data/feed.dart';
 import 'package:flutter/cupertino.dart';
 // import 'package:sqflite/sqflite.dart';
@@ -92,7 +93,7 @@ class _HomePageState extends State<HomePage> {
   Widget _buildSettingsView() {
     return new CupertinoTabView(
       builder: (BuildContext context) {
-        return Text("Settings Page");
+        return getSettingsPage();
       },
     );
   }
