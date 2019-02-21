@@ -10,7 +10,16 @@ Widget getSettingsPage() {
         Divider(height: 15.0, color: Colors.transparent),
         ListTile(
           title: Text("Remove ads"),
-          subtitle: Text("Get rid of all ads for \$2/yr"),
+          subtitle: Text("Get rid of all ads for \$2/yr."),
+          onTap: () {
+            print("Tapped");
+          },
+          trailing: Icon(Icons.arrow_forward_ios, size: 15,),
+        ),
+        Divider(height: 15.0),
+        ListTile(
+          title: Text("Contribute & Support"),
+          subtitle: Text("Love the app? You can support the developer by making a contribution of \$5.\n\nBonus: Removes all ads forever"),
           onTap: () {
             print("Tapped");
           },
@@ -19,7 +28,7 @@ Widget getSettingsPage() {
         Divider(height: 15.0),
         ListTile(
           title: Text("Rate & Review app"),
-          subtitle: Text("Love the app? Leave us a review on Store"),
+          subtitle: Text("Spread the word. Leave us a review on Store."),
           onTap: () {
             print("Tapped");
           },
