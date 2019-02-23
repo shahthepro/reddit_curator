@@ -20,7 +20,7 @@ class HomePage extends StatefulWidget {
 
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with NavigatorObserver {
   bool _loadedFromDatabase = false;
 
   @override
@@ -277,9 +277,9 @@ class _HomePageState extends State<HomePage> {
     state.favoriteFeed(feed);
   }
 
-  void _showImageSwiper({ int startIndex = 0 }) {
+  void _showImageSwiper({ int startIndex = 0 }) async {
     disposeBannerAd();
-    Navigator.of(context).push(
+    await Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (context) {
           return new ImageViewerScreen(
@@ -291,6 +291,7 @@ class _HomePageState extends State<HomePage> {
         }
       )
     );
+    createAndShowBannerAd();
   }
 
   Future<void> _fetchOldFeeds({bool popular = false}) async {
@@ -324,4 +325,14 @@ class _HomePageState extends State<HomePage> {
         state.prependFeeds(newData, popular: popular);
       });
   }
+
+
+  // @override
+  // void didPop(Route<dynamic> route, Route<dynamic> previousRoute) {
+  //   // AppStateWidgetState state = AppStateWidget.of(context);
+
+  //   // if (state.shouldShowAds) {
+  //   createAndShowBannerAd();
+  //   // }
+  // }
 }

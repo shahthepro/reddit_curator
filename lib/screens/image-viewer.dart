@@ -28,14 +28,14 @@ class _ImageViewerScreenState extends State<ImageViewerScreen> {
   int _currentIndex;
   bool _hidden = false;
 
-  @override
-  void dispose() {
-    final AppStateWidgetState state = AppStateWidget.of(context);
-    if (state.shouldShowAds) {
-      createAndShowBannerAd();
-    }
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   final AppStateWidgetState state = AppStateWidget.of(context);
+  //   if (state.shouldShowAds) {
+  //     createAndShowBannerAd();
+  //   }
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {

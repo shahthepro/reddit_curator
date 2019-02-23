@@ -61,6 +61,7 @@ Future<void> showInterstitialAdIfNecessary() async {
 // }
 
 void createAndShowBannerAd() {
+  disposeBannerAd();
   myBanner = BannerAd(
     adUnitId: 'ca-app-pub-3061718245955245/6882442044',
     size: AdSize.banner,
@@ -86,4 +87,5 @@ void disposeAllAds() {
 
 void disposeBannerAd() {
   myBanner?.dispose();
+  myBanner = null;
 }
