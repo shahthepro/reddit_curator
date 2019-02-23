@@ -85,15 +85,15 @@ class _HomePageState extends State<HomePage> {
       case 2:
         return _buildFavoritesTabView();
       case 3:
-        return _buildSettingsView();
+        return _buildSettingsView(context);
     }
     return _buildRecentTabView();
   }
 
-  Widget _buildSettingsView() {
+  Widget _buildSettingsView(BuildContext rootContext) {
     return new CupertinoTabView(
       builder: (BuildContext context) {
-        return getSettingsPage();
+        return getSettingsPage(rootContext);
       },
     );
   }
