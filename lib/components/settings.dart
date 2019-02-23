@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+// import 'package:app_review/app_review.dart';
 
 Widget getSettingsPage(BuildContext context) {
   return Container(
@@ -30,9 +31,7 @@ Widget getSettingsPage(BuildContext context) {
         ListTile(
           title: Text("Rate & Review app"),
           subtitle: Text("Spread the word. Leave us a review on Store."),
-          onTap: () {
-            print("Tapped");
-          },
+          onTap: openReviewPage,
           trailing: Icon(Icons.arrow_forward_ios, size: 15,),
         ),
         Divider(height: 15.0),
@@ -50,6 +49,21 @@ Widget getSettingsPage(BuildContext context) {
       ],
     ),
   );
+}
+
+void openReviewPage() async {
+  const url = 'https://play.google.com/store/apps/details?id=com.kirukku.awwstagram';
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+  // try {
+  //   var value = await AppReview.requestReview;
+  //   print(value);
+  // } catch (e) {
+  //   print(e);
+  // }
 }
 
 void openPrivacyPolicyPage() async {

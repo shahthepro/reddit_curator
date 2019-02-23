@@ -1,4 +1,4 @@
-package com.example.redditcurator;
+package com.kirukku.awwstagram;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

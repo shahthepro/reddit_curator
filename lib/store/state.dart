@@ -41,7 +41,7 @@ class AppStateWidget extends StatefulWidget {
 }
 
 class AppStateWidgetState extends State<AppStateWidget>{
-  String get appTitle => "MediaCurator";
+  String get appTitle => "Awwstagram";
 
   TabViewPages _activeTab = TabViewPages.Recent;
   TabViewPages get activeTab => _activeTab;
