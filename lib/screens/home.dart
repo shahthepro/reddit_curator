@@ -24,11 +24,23 @@ class _HomePageState extends State<HomePage> {
   bool _loadedFromDatabase = false;
 
   @override
+  void initState() {
+    super.initState();
+
+    createAndShowBannerAd();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final AppStateWidgetState state = AppStateWidget.of(context);
 
     if (!_loadedFromDatabase) {
       _loadedFromDatabase = true;
+
+      // if (state.shouldShowAds) {
+      //   createAndShowBannerAd();
+      // }
+
       getAllFavorites().then((favs) { state.loadFavorites(favs); });
     }
 
@@ -54,6 +66,12 @@ class _HomePageState extends State<HomePage> {
         ],
       )
     );
+  }
+
+  @override
+  void dispose() {
+    disposeAllAds();
+    super.dispose();
   }
 
   Widget _getBottomTabBar(AppStateWidgetState state) {
@@ -227,15 +245,15 @@ class _HomePageState extends State<HomePage> {
       onFavorite: _onFeedFavorite,
     );
 
-    if (state.shouldShowAds && (index + 1) % 6 == 0) {
-      return Column(children: <Widget>[
-        card,
-        Padding(
-          padding: EdgeInsets.all(30.0),
-          child:getBannerAd(),
-        ),
-      ]);
-    }
+    // if (state.shouldShowAds && (index + 1) % 6 == 0) {
+    //   return Column(children: <Widget>[
+    //     card,
+    //     Padding(
+    //       padding: EdgeInsets.all(30.0),
+    //       child:getBannerAd(),
+    //     ),
+    //   ]);
+    // }
 
     return card;
   }
