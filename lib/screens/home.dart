@@ -278,6 +278,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _showImageSwiper({ int startIndex = 0 }) {
+    disposeBannerAd();
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (context) {

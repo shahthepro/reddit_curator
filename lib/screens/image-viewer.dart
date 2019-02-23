@@ -29,6 +29,15 @@ class _ImageViewerScreenState extends State<ImageViewerScreen> {
   bool _hidden = false;
 
   @override
+  void dispose() {
+    final AppStateWidgetState state = AppStateWidget.of(context);
+    if (state.shouldShowAds) {
+      createAndShowBannerAd();
+    }
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final AppStateWidgetState state = AppStateWidget.of(context);
     // _images.removeRange(0, _images.length);

@@ -83,3 +83,7 @@ void disposeAllAds() {
   myInterstitial?.dispose();
   myBanner?.dispose();
 }
+
+void disposeBannerAd() {
+  myBanner?.dispose();
+}
