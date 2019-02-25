@@ -120,7 +120,7 @@ class _ImageViewerScreenState extends State<ImageViewerScreen> {
       _currentIndex = index;
       _currentFeed =_allFeeds[index];
     });
-    showInterstitialAdIfNecessary();
+    // showInterstitialAdIfNecessary();
   }
 
   void _mapFeedsToGallery(List<FeedItem> feeds) {

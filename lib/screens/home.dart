@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> with NavigatorObserver {
   void initState() {
     super.initState();
 
-    createAndShowBannerAd();
+    // createAndShowBannerAd();
   }
 
   @override
@@ -235,9 +235,6 @@ class _HomePageState extends State<HomePage> with NavigatorObserver {
       feed,
       context: context,
       onImageTap: () {
-        if (state.shouldShowAds) {
-          showInterstitialAdIfNecessary();
-        }
         _showImageSwiper(startIndex: index);
       },
       onDownload: _onFeedDownload,
@@ -291,7 +288,7 @@ class _HomePageState extends State<HomePage> with NavigatorObserver {
         }
       )
     );
-    createAndShowBannerAd();
+    // createAndShowBannerAd();
   }
 
   Future<void> _fetchOldFeeds({bool popular = false}) async {

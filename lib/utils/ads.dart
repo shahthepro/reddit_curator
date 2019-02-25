@@ -4,45 +4,45 @@ import 'dart:async';
 // import 'package:flutter/material.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 
-int count = 0;
-bool interestitialReady = false;
+// int count = 0;
+// bool interestitialReady = false;
 InterstitialAd myInterstitial;
 BannerAd myBanner;
 // AdmobInterstitial myInterstitial;
 
 Future<void> showInterstitialAdIfNecessary() async {
-  count = count + 1;
+  // count = count + 1;
 
-  if (interestitialReady) {
-    myInterstitial.show();
-    return;
-  }
+  // if (interestitialReady) {
+  //   myInterstitial.show();
+  //   return;
+  // }
 
-  if (count % 10 != 0) {
-    return;
-  }
+  // if (count % 10 != 0) {
+  //   return;
+  // }
 
-  count = 0;
+  // count = 0;
   myInterstitial = InterstitialAd(
     adUnitId: "ca-app-pub-3061718245955245/1972185702",
-    listener: (MobileAdEvent event) {
-      switch (event) {
-        case MobileAdEvent.loaded:
-          interestitialReady = true;
-          break;
-        case MobileAdEvent.closed:
-        case MobileAdEvent.leftApplication:
-        case MobileAdEvent.failedToLoad:
-          interestitialReady = false;
-          myInterstitial.dispose();
-          break;
-        default:
-      }
-      print("InterstitialAd event is $event");
-    },
+    // listener: (MobileAdEvent event) {
+    //   switch (event) {
+    //     case MobileAdEvent.loaded:
+    //       interestitialReady = true;
+    //       break;
+    //     case MobileAdEvent.closed:
+    //     case MobileAdEvent.leftApplication:
+    //     case MobileAdEvent.failedToLoad:
+    //       interestitialReady = false;
+    //       myInterstitial.dispose();
+    //       break;
+    //     default:
+    //   }
+    //   print("InterstitialAd event is $event");
+    // },
   );
 
-  myInterstitial.load();
+  myInterstitial..load()..show();
 }
 
 // Widget getBannerAd() {
@@ -66,7 +66,6 @@ void createAndShowBannerAd() {
     adUnitId: 'ca-app-pub-3061718245955245/6882442044',
     size: AdSize.banner,
     listener: (MobileAdEvent event) {
-      print(event);
       switch (event) {
         case MobileAdEvent.loaded:
           break;
