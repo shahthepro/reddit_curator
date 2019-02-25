@@ -23,26 +23,26 @@ Future<void> showInterstitialAdIfNecessary() async {
   // }
 
   // count = 0;
-  myInterstitial = InterstitialAd(
-    adUnitId: "ca-app-pub-3061718245955245/1972185702",
-    // listener: (MobileAdEvent event) {
-    //   switch (event) {
-    //     case MobileAdEvent.loaded:
-    //       interestitialReady = true;
-    //       break;
-    //     case MobileAdEvent.closed:
-    //     case MobileAdEvent.leftApplication:
-    //     case MobileAdEvent.failedToLoad:
-    //       interestitialReady = false;
-    //       myInterstitial.dispose();
-    //       break;
-    //     default:
-    //   }
-    //   print("InterstitialAd event is $event");
-    // },
-  );
+  return new Future(() async {
+    myInterstitial = InterstitialAd(
+      adUnitId: "ca-app-pub-3061718245955245/1972185702",
+      listener: (MobileAdEvent event) {
+        switch (event) {
+          case MobileAdEvent.closed:
+          case MobileAdEvent.leftApplication:
+          case MobileAdEvent.failedToLoad:
+            // interestitialReady = false;
+            myInterstitial.dispose();
+            break;
+          default:
+        }
+      //   print("InterstitialAd event is $event");
+      },
+    );
 
-  myInterstitial..load()..show();
+    await myInterstitial.load();
+    await myInterstitial.show();
+  });
 }
 
 // Widget getBannerAd() {

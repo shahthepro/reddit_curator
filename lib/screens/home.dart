@@ -255,21 +255,21 @@ class _HomePageState extends State<HomePage> with NavigatorObserver {
     return card;
   }
 
-  void _onFeedDownload({ FeedItem feed, AppStateWidgetState state }) {
+  void _onFeedDownload({ FeedItem feed, AppStateWidgetState state }) async {
     if (state.shouldShowAds) {
-      showInterstitialAdIfNecessary();
+      await showInterstitialAdIfNecessary();
     }
     downloadImage(feed.link);
   }
-  void _onFeedShare({ FeedItem feed, AppStateWidgetState state }) {
+  void _onFeedShare({ FeedItem feed, AppStateWidgetState state }) async {
     if (state.shouldShowAds) {
-      showInterstitialAdIfNecessary();
+      await showInterstitialAdIfNecessary();
     }
     shareImage(feed.link);
   }
-  void _onFeedFavorite({ FeedItem feed, AppStateWidgetState state }) {
+  void _onFeedFavorite({ FeedItem feed, AppStateWidgetState state }) async {
     if (state.shouldShowAds) {
-      showInterstitialAdIfNecessary();
+      await showInterstitialAdIfNecessary();
     }
     state.favoriteFeed(feed);
   }
